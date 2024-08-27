@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import sys
 
 import pygame
 
@@ -36,6 +37,7 @@ class Game:
 
             elif menu_return == MENU_OPTION[4]:
                 pygame.quit()
-                quit()  # exit
+                quit()
             else:
-                pass
+                pygame.quit()
+                sys.exit()
