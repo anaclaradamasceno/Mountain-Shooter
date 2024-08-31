@@ -10,7 +10,7 @@ from pygame.font import Font
 from code.Enemy import Enemy
 from code.EntityMediator import EntityMediator
 from code.Const import C_WHITE, WIN_HEIGHT, MENU_OPTION, EVENT_ENEMY, SPAWN_TIME, C_GREEN, C_CYAN, EVENT_TIMEOUT, \
-    TIMEOUT_STEP, TIMEOUT_LEVEL
+    TIMEOUT_STEP, TIMEOUT_LEVEL, TIMEOUT_LEVEL3
 from code.Entity import Entity
 from code.EntityFactory import EntityFactory
 from code.Player import Player
@@ -18,6 +18,10 @@ from code.Player import Player
 
 class Level:
     def __init__(self, window: Surface, name: str, game_mode: str, player_score: list[int]):
+        if name == 'Level3':
+            self.timeout = TIMEOUT_LEVEL3
+        else:
+            self.timeout = TIMEOUT_LEVEL
         self.blit = None
         self.window = window
         self.name = name
@@ -27,7 +31,10 @@ class Level:
         player = EntityFactory.get_entity('Player1')
         player.score = player_score[0]
         self.entity_list.append(player)
-        self.timeout = TIMEOUT_LEVEL
+        if self.name == 'Level1' or self.name == 'Level2':
+            self.timeout = TIMEOUT_LEVEL
+        else:
+            self.timeout = TIMEOUT_LEVEL3
         if game_mode in [MENU_OPTION[1], MENU_OPTION[2]]:
             player = EntityFactory.get_entity('Player2')
             player.score = player_score[1]
@@ -59,9 +66,13 @@ class Level:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+
                 if event.type == EVENT_ENEMY:
-                    choice = random.choice(('Enemy1', 'Enemy2'))
-                    self.entity_list.append(EntityFactory.get_entity(choice))
+                    if self.name == 'Level3':
+                        self.entity_list.append(EntityFactory.get_entity('Enemy3'))
+                    else:
+                        choice = random.choice(('Enemy1', 'Enemy2'))
+                        self.entity_list.append(EntityFactory.get_entity(choice))
                 if event.type == EVENT_TIMEOUT:
                     self.timeout -= TIMEOUT_STEP
                     if self.timeout == 0:
